@@ -3,8 +3,6 @@ import 'dotenv/config';
 
 async function main(email, pw) {
 
-    console.log(process.env.WG_USER, process.env.WG_PASSWORD)
-
     if (!process.env.WG_USER || process.env.WG_USER.length < 1 ||
         !process.env.WG_PASSWORD || process.env.WG_PASSWORD.length < 1)
         return console.error("Err: No User or Password given")
