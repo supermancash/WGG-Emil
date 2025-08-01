@@ -7,8 +7,8 @@ import 'dotenv/config';
 
 async function main(email, pw) {
 
-    if (!process.env.WG_USER || process.env.WG_USER.length < 1 ||
-        !process.env.WG_PASSWORD || process.env.WG_PASSWORD.length < 1)
+    if (!process.env.WG_USER_JO || process.env.WG_USER_JO.length < 1 ||
+        !process.env.WG_PASSWORD_JO || process.env.WG_PASSWORD_JO.length < 1)
         return console.error("Err: No User or Password given")
 
     const browser = process.env.NODE_ENV === "development" ?
