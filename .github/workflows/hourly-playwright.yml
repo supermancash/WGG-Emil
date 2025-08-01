@@ -1,0 +1,28 @@
+name: Run Playwright hourly
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # top of every hour UTC; adjust if you need Berlin-local offset
+  workflow_dispatch: {}  # manual trigger allowed
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run Playwright script
+        env:
+          WG_USER: ${{ secrets.WG_USER }}
+          WG_PASSWORD: ${{ secrets.WG_PASSWORD }}
+        run: |
+          npm run start
