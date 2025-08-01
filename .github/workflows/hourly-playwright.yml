@@ -30,5 +30,7 @@ jobs:
         env:
           WG_USER: ${{ matrix.branch == 'jo' && secrets.WG_USER_JO || secrets.WG_USER }}
           WG_PASSWORD: ${{ matrix.branch == 'jo' && secrets.WG_PASSWORD_JO || secrets.WG_PASSWORD }}
+          WG_USER_JO: ${{secrets.WG_USER_JO}}
+          WG_PASSWORD_JO: ${{secrets.WG_PASSWORD_JO}}
         run: |
           npm run start
