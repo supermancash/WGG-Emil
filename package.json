@@ -15,7 +15,9 @@
     "@types/node": "^24.1.0"
   },
   "dependencies": {
+    "@sparticuz/chromium-min": "^138.0.2",
     "dotenv": "^17.2.1",
-    "playwright": "^1.54.1"
+    "playwright": "^1.54.1",
+    "playwright-core": "^1.54.2"
   }
 }

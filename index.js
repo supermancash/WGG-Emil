@@ -1,4 +1,8 @@
-import {chromium} from 'playwright';
+import chromium from '@sparticuz/chromium-min';
+import {chromium as playwright} from "playwright-core";
+
+import {chromium as devChromium} from "playwright";
+
 import 'dotenv/config';
 
 async function main(email, pw) {
@@ -7,7 +11,18 @@ async function main(email, pw) {
         !process.env.WG_PASSWORD || process.env.WG_PASSWORD.length < 1)
         return console.error("Err: No User or Password given")
 
-    const browser = await chromium.launch({headless: true});
+    const browser = process.env.NODE_ENV === "development" ?
+        await devChromium.launch({headless: false}) :
+        await playwright.launch({
+            args: chromium.args,
+            executablePath: await chromium.executablePath(
+                `https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar`
+            ),
+            headless: true,
+        });
+
+
+
     const context = await browser.newContext();
     const page = await context.newPage();
 
