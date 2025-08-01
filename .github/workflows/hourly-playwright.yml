@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Playwright script
         env:
-          WG_USER: ${{ secrets.WG_USER_JO }}
-          WG_PASSWORD: ${{ secrets.WG_PASSWORD_JO }}
+          WG_USER_JO: ${{ secrets.WG_USER_JO }}
+          WG_PASSWORD_JO: ${{ secrets.WG_PASSWORD_JO }}
         run: |
           npm run start
