@@ -1,15 +1,21 @@
-name: Run Playwright hourly
+name: Run Playwright hourly for master and jo
 
 on:
   schedule:
-    - cron: "0 * * * *"  # top of every hour UTC; adjust if you need Berlin-local offset
-  workflow_dispatch: {}  # manual trigger allowed
+    - cron: "0 * * * *"  # every hour UTC
+  workflow_dispatch: {}
 
 jobs:
-  run:
+  run-branches:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: ["master", "jo"]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout that branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -20,9 +26,11 @@ jobs:
         run: |
           npm ci
 
-      - name: Run Playwright script
+      - name: Run Playwright script for ${{ matrix.branch }}
         env:
-          WG_USER: ${{ secrets.WG_USER }}
-          WG_PASSWORD: ${{ secrets.WG_PASSWORD }}
+          WG_USER: ${{ matrix.branch == 'jo' && secrets.WG_USER_JO || secrets.WG_USER }}
+          WG_PASSWORD: ${{ matrix.branch == 'jo' && secrets.WG_PASSWORD_JO || secrets.WG_PASSWORD }}
+          WG_USER_JO: ${{secrets.WG_USER_JO}}
+          WG_PASSWORD_JO: ${{secrets.WG_PASSWORD_JO}}
         run: |
           npm run start
