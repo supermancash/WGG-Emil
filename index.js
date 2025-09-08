@@ -94,7 +94,7 @@ async function main(email, pw) {
 
     let msgPageNum = 1;
 
-    await sendMessage(page, msgPageNum, msgPages)
+     await sendMessage(page, msgPageNum, msgPages)
 
 
     await page.waitForTimeout(5000);
@@ -107,52 +107,61 @@ async function main(email, pw) {
 }
 
 async function sendMessage(page, msgPageNum, msgPages) {
+    return new Promise(async (resolve, reject) => {
 
-    const convos = await page.locator(
-        `div[class="panel-body conversation_selected conversation_unread "]`
-    );
-
-    console.log(`Convo count: ${await convos.count()}`)
-
-    if (await convos.count() === 0) {
-        msgPageNum++;
-        if(msgPageNum > msgPages +1) return console.log("Page finished");
         await page.goto(`https://www.wg-gesucht.de/nachrichten.html?page=${msgPageNum}`)
-    }
 
-    const convo = await convos.first();
+        const convos = await page.locator(
+            `div[class="panel-body conversation_selected conversation_unread "]`
+        );
 
-    const convoId = (await convo.getAttribute("data-conversation_id"));
+        console.log(`Convo count: ${await convos.count()}`)
 
-    await page.goto(`https://www.wg-gesucht.de/nachricht.html?nachrichten-id=${convoId}`)
+        if (await convos.count() === 0) {
+            if (msgPageNum >= msgPages) {
+                console.log("Pages finished");
+                return resolve();
+            }
+            await sendMessage(page, msgPageNum + 1, msgPages)
+            return resolve();
+        }
 
-    await page.locator(
-        `button[id="conversation_controls_dropdown"]`
-    ).click();
+        const convo = await convos.first();
 
-    await page.locator(
-        `a[data-toggle="modal"]`
-    ).filter({hasText: 'Nachrichtenvorlagen'}).click();
+        const convoId = (await convo.getAttribute("data-conversation_id"));
 
-    await page.locator(
-        `label[class="message_template_label"]`
-    ).filter({hasText: 'auto'}).click();
+        await page.goto(`https://www.wg-gesucht.de/nachricht.html?nachrichten-id=${convoId}`)
+
+        await page.locator(
+            `button[id="conversation_controls_dropdown"]`
+        ).click();
+
+        await page.locator(
+            `a[data-toggle="modal"]`
+        ).filter({hasText: 'Nachrichtenvorlagen'}).click();
+
+        await page.locator(
+            `label[class="message_template_label"]`
+        ).filter({hasText: 'auto'}).click();
 
 
-    await page.locator(
-        `button[class="btn btn-block wgg_orange no-capitalize conversation_send_button send_messages"]`
-    ).click();
+        await page.locator(
+            `button[class="btn btn-block wgg_orange no-capitalize conversation_send_button send_messages"]`
+        ).click();
 
-    try {
-        await page.goto(`https://www.wg-gesucht.de/nachrichten.html?page=${msgPageNum}`);
-    } catch (e) {
-        console.error(e);
-        await page.waitForTimeout(5000);
-        await page.goto("https://google.de");
-        await page.goto(`https://www.wg-gesucht.de/nachrichten.html?page=${msgPageNum}`);
-    }
+        try {
+            await page.goto(`https://www.wg-gesucht.de/nachrichten.html?page=${msgPageNum}`);
+        } catch (e) {
+            console.error(e);
+            await page.waitForTimeout(5000);
+            await page.goto("https://google.de");
+            await page.goto(`https://www.wg-gesucht.de/nachrichten.html?page=${msgPageNum}`);
+        }
 
-    await sendMessage(page, msgPageNum, msgPages);
+
+        await sendMessage(page, msgPageNum, msgPages);
+        return resolve();
+    })
 }
 
 await main(process.env.WG_USER_JO, process.env.WG_PASSWORD_JO);
