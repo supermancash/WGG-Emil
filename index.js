@@ -144,6 +144,10 @@ async function sendMessage(page, msgPageNum, msgPages) {
             `label[class="message_template_label"]`
         ).filter({hasText: 'auto'}).click();
 
+        await page.locator(
+            `button[class="btn btn-block wgg_blue use_message_template"]`
+        ).click();
+
 
         await page.locator(
             `button[class="btn btn-block wgg_orange no-capitalize conversation_send_button send_messages"]`
