@@ -1,9 +1,9 @@
-name: Run Playwright hourly for master and jo
+name: Run Playwright every 30 mins
 
 on:
   schedule:
-    - cron: "0 * * * *"  # every hour UTC
-  workflow_dispatch: {}
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}  # manual trigger allowed
 
 jobs:
   run-branches:
