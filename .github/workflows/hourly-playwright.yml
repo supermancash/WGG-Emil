@@ -1,8 +1,8 @@
-name: Run Playwright hourly
+name: Run Playwright every 30 mins
 
 on:
   schedule:
-    - cron: "0 * * * *"  # top of every hour UTC; adjust if you need Berlin-local offset
+    - cron: "*/30 * * * *"
   workflow_dispatch: {}  # manual trigger allowed
 
 jobs:
